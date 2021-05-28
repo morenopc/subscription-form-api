@@ -37,11 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # installed apps
     'rest_framework',
-
     # local apps
+    'app',
     'api',
     'subscriptions',
 ]
@@ -56,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'subscription_form_api.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
@@ -74,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'subscription_form_api.wsgi.application'
+WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Database
