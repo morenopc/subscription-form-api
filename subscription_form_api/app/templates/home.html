@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block jumbotron %}<h1>Customer Subscription</h1>{% endblock %}
 
@@ -6,19 +7,76 @@
   <h2>Form</h2>
   <form>
     <div class="form-group">
-      <label for="exampleInputEmail1">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+      <label for="name">{% translate "Customer name" %}</label>
+      <input type="text" name="name" class="form-control" id="id_name" placeholder="{% translate "Enter your name" %}" required>
     </div>
     <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      <label for="email">{% translate "Email address" %}</label>
+      <input type="email" name="email" class="form-control" id="id_email" placeholder="{% translate "Enter your email" %}" required>
     </div>
-    <div class="form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <div class="form-group">
+      <label for="subscription_type">{% translate "Subscription type" %}</label>
+      <select name="subscription_type" id="id_subscription_type" class="form-control" required>
+        <option value="free" selected>{% translate "Free" %}</option>
+        <option value="plus">{% translate "Plus" %}</option>
+        <option value="pro">{% translate "Pro" %}</option>
+      </select>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
   <hr>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>{% translate "customer name" %}</th>
+          <th>{% translate "email address" %}</th>
+          <th>{% translate "subscription type" %}</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <script type="text/javascript">
+    // execute when the DOM is fully loaded
+    $(function() {
+      // subscriptions ajax GET request
+      $.getJSON("{% url 'api:subscriptions' %}", function(data) {
+        var items = [];
+        $.each(data, function(key, val){
+          items.push(
+            "<tr>" +
+            "<td>" + val.id + "</td>" +
+            "<td>" + val.name + "</td>" +
+            "<td>" + val.email + "</td>" +
+            "<td>" + val.subscription_type + "</td>" +
+            "</tr>");
+        });
+        $("<tbody/>", {
+          html: items.join("")
+        }).appendTo("table");
+      });
+    });
+
+    // subscription ajax POST form submit
+    $("form").on("submit", function(e){
+      e.preventDefault();
+      var form = $(this);
+      $.ajax({
+        type: "POST",
+        url: "{% url 'api:subscriptions' %}",
+        data: form.serialize(),
+        success: function(response){
+          form.trigger("reset");
+          $("tbody").prepend(
+            "<tr>" +
+            "<td>" + response.id + "</td>" +
+            "<td>" + response.name + "</td>" +
+            "<td>" + response.email + "</td>" +
+            "<td>" + response.subscription_type + "</td>" +
+            "</tr>");
+        }
+     });
+    });
+  </script>
 {% endblock %}
