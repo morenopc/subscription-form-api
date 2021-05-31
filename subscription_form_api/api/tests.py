@@ -41,7 +41,7 @@ class SubscriptionsApiTest(TestCase):
             subscription_type='pro')
 
         serializer = SubscriptionSerializer(
-            Subscription.objects.all(), many=True)
+            Subscription.objects.order_by('-id')[:10], many=True)
 
         response = self.client.get(reverse('api:subscriptions'))
 
