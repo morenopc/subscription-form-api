@@ -19,9 +19,9 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('angularjs/',
-         TemplateView.as_view(template_name='angularjs/subscription.html'),
-         name='angularjs'),
+    path('jquery', TemplateView.as_view(template_name='home.html'),
+         name='jquery'),
+    path('', TemplateView.as_view(template_name='angularjs/subscription.html'),
+         name='home'),
     path('api/', include('api.urls', namespace='api')),
 ]
